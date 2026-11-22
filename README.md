@@ -1,5 +1,11 @@
 # mute
 
+> [!NOTE]
+> This is `Majirefy/mute-player`, a fork of [bphenriques/mute-player](https://github.com/bphenriques/mute-player).
+> It bundles the Zpix (最像素) pixel font as mute's single text face so Chinese and other CJK
+> labels — songs, artists, albums and synced lyrics — display properly, matching the same font in
+> [Majirefy/slot](https://github.com/Majirefy/slot), which pins this fork.
+
 > [!WARNING]
 > **Experimental, and built with AI assistance.** I have experience in the field and did my best
 > to follow the right patterns, but I am not an expert on this, and in the end I wanted a fast,
@@ -27,6 +33,9 @@ What I focused on:
 - **A decoupled design.** The player is crates any host builds in; slot only hosts it, so it
   isn't tied to slot.
 - **Minimal and modern.** Familiar keys, one kind of row, quiet animations, light and dark.
+- **CJK display (this fork).** All text uses the embedded Zpix pixel font, the same one slot uses,
+  so Chinese titles, artists, albums and lyrics render as pixels instead of vanishing. English and
+  Chinese share the typeface, and there is no per-glyph fallback to a mismatched font.
 
 A music and audiobook player for handhelds: offline, minimal, and quick to find your way in. It
 plays music by artist, album, genre, year or folder, with lyrics, an equalizer and gapless
@@ -64,5 +73,7 @@ nix-shell --run "UPDATE_SHOTS=1 cargo test -q -p mute-view --test shots"
 
 ## Licence
 
-GPL-3.0-or-later (`LICENSE`). SoundTouch (`crates/mute-audio/soundtouch`) is LGPL-2.1; the fonts
-in `crates/mute-ui/assets` are under the OFL and MIT, their licences beside them.
+GPL-3.0-or-later (`LICENSE`). SoundTouch (`crates/mute-audio/soundtouch`) is LGPL-2.1; the Nerd
+Font symbols font in `crates/mute-ui/assets` is under the OFL, its licence beside it. Zpix (最像素)
+has its own terms, in `crates/mute-ui/assets/zpix.ttf.LICENSE.txt`: free for personal and
+educational use, with a paid licence required for commercial use.

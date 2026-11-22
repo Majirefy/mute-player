@@ -11,7 +11,10 @@ pub(super) use super::draw::{Canvas, Draw, TexId};
 
 use super::theme::{CAP_FACE, CAP_INK};
 
-const LABEL_TTF: &[u8] = include_bytes!("../assets/label.ttf");
+// Zpix (最像素) is the one text face here, as it is in slot: Latin, CJK and symbols in labels
+// share the same pixel typeface, so a mixed-language library looks of a piece with its host.
+// It is embedded at build time and loaded lazily on first use; no per-glyph fallback is needed.
+const LABEL_TTF: &[u8] = include_bytes!("../assets/zpix.ttf");
 const SYMBOLS_TTF: &[u8] = include_bytes!("../assets/SymbolsNerdFontMono-Regular.ttf");
 
 // Slot's menus' measures, which the music screens keep to.
@@ -401,4 +404,31 @@ pub(super) fn render_svg(svg: &str, w: u32, h: u32) -> Option<Vec<u8>> {
         }
     }
     Some(rgba)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    const CJK: &str = "极光小巷 港湾之歌 北极光";
+
+    #[test]
+    fn the_one_font_covers_both_latin_and_cjk() {
+        let font = label_font().expect("embedded Zpix font");
+        for ch in CJK.chars().chain("Slot 123".chars()) {
+            assert_ne!(font.lookup_glyph_index(ch), 0, "font lacks {ch:?}");
+        }
+    }
+
+    #[test]
+    fn cjk_text_draws_real_ink() {
+        let font = label_font().expect("embedded Zpix font");
+        let layout = fit(font, CJK, 200.0, 1, LABEL_PX, LABEL_MIN_PX);
+        let mut rgba = vec![0u8; 200 * 40 * 4];
+        draw_centred(&mut rgba, 200, 40, &layout, [255, 255, 255]);
+        assert!(
+            rgba.chunks_exact(4).any(|px| px[3] > 0),
+            "CJK text drew no ink"
+        );
+    }
 }

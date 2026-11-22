@@ -598,11 +598,12 @@ fn a_two_line_row_is_centred_in_its_highlight_from_its_capitals_to_its_baseline(
     let mut screen = Screen::new(card);
     screen.open("Library");
     screen.open("Albums");
-    // "Aurora Lane" under it: nothing hangs below its baseline, so the room is even.
+    // "Aurora Lane" under it: nothing hangs below its baseline, so the room is even. Zpix's
+    // glyph box sits a row off the old font's, so allow a pixel of difference in that room.
     screen.to("First Light");
     let (above, below) = room(&screen.shot());
     assert!(
-        above == below && above >= 6.0,
+        (above - below).abs() <= 1.0 && above >= 6.0,
         "even: {above} above, {below} below"
     );
     // "Paper Kites Club": the p hangs into the room beneath, the pair where it was.
